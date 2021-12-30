@@ -9,28 +9,49 @@ class App extends Component {
         super(props);
 
         this.state = {
-            tasksArr: [],
-            currTask: "",
+            tasksArr: [
+                {
+                    task: "Clean Room!",
+                    uuid: uniqid(),
+                },
+                {
+                    task: "Math HW :(",
+                    uuid: uniqid(),
+                },
+            ],
+            currTask: {},
             /*array to store tasks to render*/
         };
 
-        this.addTask = this.addTaskHandler.bind(this);
+        this.addTask = this._addTask.bind(this);
+        this.deleteTask = this._deleteTask.bind(this);
     }
 
-    addTaskHandler(event) {
+    _addTask(event) {
         const inputField = document.getElementById("add-task-input");
         if (!inputField.value) {
             return;
         }
         this.setState(
             {
-                currTask: inputField.value,
+                currTask: {
+                    task: inputField.value,
+                    uuid: uniqid(),
+                },
             },
             () => (inputField.value = "")
         );
         this.setState((prevState) => ({
             tasksArr: [...prevState.tasksArr, prevState.currTask],
         }));
+    }
+
+    _deleteTask(taskID) {
+        const index = this.state.tasksArr.findIndex((element) => element.uuid === taskID);
+        if (index < 0) return;
+        const newTaskArr = [...this.state.tasksArr];
+        newTaskArr.splice(index, 1);
+        this.setState({ tasksArr: newTaskArr });
     }
 
     render() {
@@ -55,8 +76,8 @@ class App extends Component {
                 </div>
                 <div className="tasks-pane task-flex-row">
                     <h1 className="task-pane-title">Tasks:</h1>
-                    {[...this.state.tasksArr].map((tName, idx) => (
-                        <Task taskName={tName} index={idx} key={uniqid()} />
+                    {[...this.state.tasksArr].map((taskObj, idx) => (
+                        <Task taskName={taskObj.task} index={idx} key={taskObj.uuid} uuid={taskObj.uuid} deleteFunc={this.deleteTask} />
                     ))}
                 </div>
             </div>
