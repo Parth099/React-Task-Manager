@@ -15,3 +15,6 @@ Run the React App on `localhost`
 ```linux
 npm start
 ```
+
+# Live Link
+This project is deployed on [Github-pages](http://parth099.github.io/React-Task-Manager).
